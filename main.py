@@ -2,6 +2,7 @@ import numpy as np
 import cv2
 import streamlit as st
 import tensorflow as tf
+import pandas as pd
 import matplotlib.pyplot as plt
 from PIL import Image
 from fer import FER
@@ -14,11 +15,15 @@ def AnalyseImage(img_array):
     test_image_one = img_array
     emo_detector = FER(mtcnn=True)
     # Capture all the emotions on the image
-    captured_emotions = emo_detector.detect_emotions(test_image_one)
+    #captured_emotions = emo_detector.detect_emotions(test_image_one)
+    #dominant_emotion=max(captured_emotions.values())
+    #st.write(dominant_emotion)
     # Print all captured emotions with the image
-    print(captured_emotions)
-    st.write(captured_emotions)
+    emotion, score = emo_detector.top_emotion(test_image_one)
+    print(emotion,score)
+    #st.write(captured_emotions)
     plt.imshow(test_image_one)
+    return emotion,score
 
 def main():
     # Face Analysis Application #
@@ -27,7 +32,7 @@ def main():
     choice = st.sidebar.selectbox("Select Activity", activiteis)
     st.sidebar.markdown(
         """ Developed by Emir Jibran Badardin
-            Email : mirjibs@gmail.com""")
+             Email : mirjibs@gmail.com""")
 
     if choice == "Home":
         html_temp_home1 = """<div style="background-color:#6D7B8D;padding:10px">
@@ -36,6 +41,7 @@ def main():
                                             </div>
                                             </br>"""
         st.markdown(html_temp_home1, unsafe_allow_html=True)
+        #food, service and atomosphere overall=
         st.write("""
                  The application has two functionalities.
 
@@ -64,7 +70,10 @@ def main():
             # Should output shape: (height, width, channels)
             st.write(img_array.shape)
 
-            AnalyseImage(img_array)
+
+            st.write(AnalyseImage(img_array))
+
+
 
 
 
